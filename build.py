@@ -63,8 +63,7 @@ cross_compilers = {
 # Defaults
 arch = "arm"
 cross_compile = cross_compilers[arch]
-compiler_image = None
-dockerbase = None
+build_environment = None
 git_describe = None
 git_describe_v = None
 git_commit = None
@@ -281,8 +280,7 @@ if use_environment:
     git_branch = os.environ.get('BRANCH', git_branch)
     git_describe = os.environ.get('GIT_DESCRIBE', git_describe)
     git_describe_v = os.environ.get('GIT_DESCRIBE_VERBOSE', git_describe_v)
-    compiler_image = os.environ.get('COMPILER', compiler_image)
-    dockerbase = os.environ.get('DOCKERBASE', dockerbase)
+    build_environment = os.environ.get('COMPILER', build_environment)
 
 cc_cmd = "gcc -v 2>&1"
 if cross_compile:
@@ -471,7 +469,7 @@ if install:
     bmeta['arch'] = "%s" %arch
     bmeta["cross_compile"] = "%s" %cross_compile
     bmeta["compiler_version"] = "%s" %gcc_version
-    bmeta["build_environment"] = "%s" % compiler_image
+    bmeta["build_environment"] = "%s" % build_environment
     bmeta["git_url"] = "%s" %git_url
     bmeta["git_branch"] =  "%s" %git_branch
     bmeta["git_describe"] =  "%s" %git_describe
@@ -527,7 +525,7 @@ if install:
 
     if publish:
         publish_path = os.path.join(
-            job, git_branch, git_describe, arch, defconfig_full, compiler_image)
+            job, git_branch, git_describe, arch, defconfig_full, build_environment)
         bmeta['file_server_resource'] = publish_path
 
     # Create JSON format build metadata
@@ -549,7 +547,7 @@ if install:
         build_data['git_branch'] = git_branch
         build_data['defconfig'] = defconfig
         build_data['arch'] = arch
-        build_data['build_environment'] = compiler_image
+        build_data['build_environment'] = build_environment
         if "defconfig_full" in bmeta:
             build_data['defconfig_full'] = defconfig_full
         count = 1
