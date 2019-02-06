@@ -98,7 +98,8 @@ ${kci_core}/build.py \
     sh(script: """rm -rf ${kdir}""")
 }
 
-node("docker && builder") {
+//my hack, only build on next-clang labels
+node("next-clang") {
     def j = new Job()
     def docker_image = j.dockerImageName(
         params.DOCKER_BASE, params.CC, params.CC_VERSION, params.ARCH)

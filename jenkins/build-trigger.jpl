@@ -195,9 +195,7 @@ def addExtraConfigs(configs, kdir, arch) {
         configs.add("${base_defconfig}+${e}")
 }
 
-def buildKernelStep(job, arch, config) {
-    def compiler = 'gcc'
-    def compiler_version = '7'
+def buildKernelStep(job, arch, config, cc, cc_version) {
 
     def str_params = [
         'ARCH': arch,
@@ -209,8 +207,8 @@ def buildKernelStep(job, arch, config) {
         'COMMIT_ID': params.COMMIT_ID,
         'BRANCH': params.BRANCH,
         'SRC_TARBALL': params.SRC_TARBALL,
-        'CC': compiler,
-        'CC_VERSION': compiler_version,
+        'CC': cc,
+        'CC_VERSION': cc_version,
     ]
     def job_params = []
 
@@ -266,19 +264,31 @@ node("defconfig-creator") {
         }
     }
 
-    def arch_configs = []
+    def arch_config_cc_ccv = []
 
     stage("Configs") {
         for (String arch: archs) {
             def configs = ["allnoconfig"]
+            def cc = 'gcc'
+            def cc_version = '7'
 
-            addDefconfigs(configs, kdir, arch)
+            if (params.TREE_NAME == "next-clang") {
+                if (arch == "arm64") {
+                    arch_config_cc_ccv.add([arch, "defconfig", "clang", '8'])
+                    arch_config_cc_ccv.add([arch, "allmodconfig", "clang", '8'])
+                    arch_config_cc_ccv.add([arch, "allnoconfig", "clang", '8'])
+                    arch_config_cc_ccv.add([arch, "tinyconfig", "clang", '8'])
+                }
+            }
+            else {
+                addDefconfigs(configs, kdir, arch)
 
-            if (params.TREE_NAME != "stable" && params.TREE_NAME != "stable-rc")
-                addExtraConfigs(configs, kdir, arch)
+                if (params.TREE_NAME != "stable" && params.TREE_NAME != "stable-rc")
+                    addExtraConfigs(configs, kdir, arch)
 
-            for (String config: configs)
-                arch_configs.add([arch, config])
+                for (String config: configs)
+                    arch_config_cc_ccv.add([arch, config, cc, cc_version])
+            }
         }
     }
 
@@ -286,11 +296,13 @@ node("defconfig-creator") {
         def builds = [:]
         def i = 0
 
-        for (x in arch_configs) {
+        for (x in arch_config_cc_ccv) {
             def arch = x[0]
             def config = x[1]
-            echo("${i} ${arch} ${config}")
-            builds["${i}_${arch}_${config}"] = buildKernelStep("kernel-build", arch, config)
+            def cc = x[2]
+            def cc_version = x[3]
+            echo("${i} ${arch} ${config} ${cc}-${cc_version}")
+            builds["${i}_${arch}_${config}_${cc}-${cc_version}"] = buildKernelStep("kernel-build", arch, config, cc, cc_version)
             i += 1
         }
 

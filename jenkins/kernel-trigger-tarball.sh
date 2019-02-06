@@ -18,6 +18,7 @@ declare -A trees
 trees=(
     [mainline]="http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
     [next]="http://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git"
+    [next-clang]="http://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git"
     [arm-soc]="http://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git"
     [rmk]="git://git.armlinux.org.uk/~rmk/linux-arm.git"
     [stable]="http://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git"
