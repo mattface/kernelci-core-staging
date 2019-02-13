@@ -53,7 +53,7 @@ KCI_CORE_BRANCH (master)
 
 */
 
-@Library('kernelci') _
+@Library('kernelci-mattface') _
 import org.kernelci.build.Kernel
 import org.kernelci.util.Job
 
