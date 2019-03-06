@@ -76,6 +76,9 @@ trees:
   next:
     url: 'git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git'
 
+  next-clang:
+    url: 'git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git'
+
   omap:
     url: "https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git"
 
@@ -384,6 +387,14 @@ build_configs:
   next:
     tree: next
     branch: 'master'
+
+  next_clang:
+    tree: next-clang
+    branch: 'master'
+    variants:
+      clang-8:
+        build_environment: clang-8
+        arch_list: ['arm', 'arm64']
 
   next_pending-fixes:
     tree: next

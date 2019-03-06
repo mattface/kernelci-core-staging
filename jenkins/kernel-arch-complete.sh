@@ -197,6 +197,10 @@ if [[ BUILDS_FINISHED -eq 4 ]]; then
         echo "Sending results for media tree"
         curl -X POST -H "Authorization: $EMAIL_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"job": "'$TREE_NAME'", "kernel": "'$GIT_DESCRIBE'", "git_branch": "'$BRANCH'",  "report_type": "test", "plan": "v4l2-compliance-vivid", "send_to": ["gtucker@collabora.com", "ezequiel@collabora.com"], "format": ["txt"], "delay": 5400}' ${API}/send
         curl -X POST -H "Authorization: $EMAIL_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"job": "'$TREE_NAME'", "kernel": "'$GIT_DESCRIBE'", "git_branch": "'$BRANCH'",  "report_type": "test", "plan": "v4l2-compliance-uvc", "send_to": ["gtucker@collabora.com", "ezequiel@collabora.com"], "format": ["txt"], "delay": 5400}' ${API}/send
+    elif [ "$TREE_NAME" == "next-clang" ]; then
+        echo "Sending results to Linux Next (clang only)"
+        curl -X POST -H "Authorization: $EMAIL_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"job": "'$TREE_NAME'", "kernel": "'$GIT_DESCRIBE'", "git_branch": "'$BRANCH'", "build_report": 1, "send_to": ["natechancellor@gmail.com", "broonie@kernel.org", "arnd.bergmann@linaro.org", "ndesaulniers@google.com", "kernel-build-reports@lists.linaro.org", "trong@google.com", "matthew.hart@linaro.org"], "format": ["txt"], "delay": 10}' ${API}/send
+        curl -X POST -H "Authorization: $EMAIL_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"job": "'$TREE_NAME'", "kernel": "'$GIT_DESCRIBE'", "git_branch": "'$BRANCH'", "boot_report": 1, "send_to": ["natechancellor@gmail.com", "broonie@kernel.org", "arnd.bergmann@linaro.org", "ndesaulniers@google.com", "kernel-build-reports@lists.linaro.org", "trong@google.com", "matthew.hart@linaro.org"], "format": ["txt"], "delay": 12600}' ${API}/send
     else
         # Private Mailing List
         echo "Sending results to private mailing list"
