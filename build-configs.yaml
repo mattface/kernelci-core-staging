@@ -384,6 +384,14 @@ build_configs:
   next:
     tree: next
     branch: 'master'
+    variants:
+      clang-8:
+        build_environment: clang-8
+        arch_list: ['arm64']
+      gcc-7:
+        build_environment: gcc-7
+        arch_list: *default_arch_list
+
 
   next_pending-fixes:
     tree: next
